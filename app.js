@@ -7,65 +7,92 @@ const cors = require("cors");
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/profiles", (request, response) => {
+app.get("/events", (request, response) => {
   queries
-    .list1()
-    .then(profiles => {
-      response.json({ profiles });
+    .list("events")
+    .then(events => {
+      response.json({ events });
     })
     .catch(console.error);
 });
 
-app.get("/comments", (request, response) => {
+app.get("/items", (request, response) => {
   queries
-    .list2()
-    .then(profiles => {
-      response.json({ profiles });
+    .list("items")
+    .then(events => {
+      response.json({ events });
     })
     .catch(console.error);
 });
 
-app.get("/profiles/:id", (request, response) => {
+app.get("/events/:id", (request, response) => {
   queries
-    .read(request.params.id)
-    .then(profiles => {
-      profiles ? response.json({ profiles }) : response.sendStatus(404);
+    .read("events", request.params.id)
+    .then(events => {
+      events ? response.json({ events }) : response.sendStatus(404);
     })
     .catch(console.error);
 });
 
-app.post("/profiles", (request, response) => {
+app.get("/items/:id", (request, response) => {
   queries
-    .create1(request.body)
-    .then(profiles => {
-      response.status(201).json({ profiles });
+    .read("items", request.params.id)
+    .then(items => {
+      items ? response.json({ items }) : response.sendStatus(404);
     })
     .catch(console.error);
 });
 
-app.post("/comments", (request, response) => {
+app.post("/events", (request, response) => {
   queries
-    .create2(request.body)
-    .then(profiles => {
-      response.status(201).json({ profiles });
+    .create("events", request.body)
+    .then(events => {
+      response.status(201).json({ events });
     })
     .catch(console.error);
 });
 
-app.delete("/profiles/:id", (request, response) => {
+app.post("/items", (request, response) => {
   queries
-    .delete(request.params.id)
+    .create("items", request.body)
+    .then(items => {
+      response.status(201).json({ items });
+    })
+    .catch(console.error);
+});
+
+app.delete("/events/:id", (request, response) => {
+  queries
+    .delete("events", request.params.id)
     .then(() => {
       response.sendStatus(204);
     })
     .catch(console.error);
 });
 
-app.put("/profiles/:id", (request, response) => {
+app.delete("/items/:id", (request, response) => {
   queries
-    .update(request.params.id, request.body)
-    .then(profiles => {
-      response.json({ profiles });
+    .delete("items", request.params.id)
+    .then(() => {
+      response.sendStatus(204);
+    })
+    .catch(console.error);
+});
+
+app.put("/events/:id", (request, response) => {
+  queries
+    .update("events", request.params.id, request.body)
+    .then(events => {
+      response.json({ events });
+    })
+    .catch(console.error);
+});
+
+app.put("/items/:id", (request, response) => {
+  queries
+    .update("items", request.params.id, request.body)
+    .then(items => {
+      response.json({ items });
     })
     .catch(console.error);
 });
