@@ -51,15 +51,16 @@ app.post("/events", (request, response) => {
     .then(events => {
       response.status(201).json({ events });
     })
+    .then(events => sendEmail)
     .catch(console.error);
 });
 
-app.post("/events", (request, response) => {
+sendEmail(events) => {
   const message = {
   from: process.env.FROM_EMAIL,
   to: process.env.TO_EMAIL,
   subject: 'New Cabin Reservation',
-  text: `The cabin has been reserved by ${req.body.title} starting on ${new Date(req.body.start)} and ending on ${new Date(req.body.end)}`
+  text: `The cabin has been reserved by ${events.title} starting on ${new Date(events.start)} and ending on ${new Date(events.end)}`
 };
 
 mailer
