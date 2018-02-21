@@ -49,31 +49,27 @@ app.post("/events", (request, response) => {
   queries
     .create("events", request.body)
     .then(events => {
-      response.status(201).json({ events });
+
+      const message = {
+      from: process.env.FROM_EMAIL,
+      to: process.env.TO_EMAIL,
+      subject: 'New Cabin Reservation',
+      text: `The cabin has been reserved by ${events.title} starting on ${events.start} and ending on ${events.end}`
+      };
+
+    mailer
+      .sendMessage(message)
+      .then(() => {
+        response.status(201).json({ events });
+      }).catch(error => {
+        res.status(500);
+        res.json({
+          error: error
+        });
+      });
+
     })
     .catch(console.error);
-});
-
-app.post("/events", (request, response) => {
-  const message = {
-  from: process.env.FROM_EMAIL,
-  to: process.env.TO_EMAIL,
-  subject: 'New Cabin Reservation',
-  text: `The cabin has been reserved by ${req.body.title} starting on ${new Date(req.body.start)} and ending on ${new Date(req.body.end)}`
-};
-
-mailer
-  .sendMessage(message)
-  .then(() => {
-    res.json({
-      message: 'Email sent.'
-    });
-  }).catch(error => {
-    res.status(500);
-    res.json({
-      error: error
-    });
-  });
 });
 
 
