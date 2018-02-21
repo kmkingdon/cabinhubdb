@@ -61,6 +61,7 @@ app.post("/events", (request, response) => {
       .sendMessage(message)
       .then(() => {
         response.status(201).json({ events });
+        console.log(events)
       }).catch(error => {
         res.status(500);
         res.json({
