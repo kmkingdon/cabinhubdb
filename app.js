@@ -3,6 +3,8 @@ const app = express();
 const queries = require("./queries");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const mailer = require('./mailer');
+require('dotenv').config();
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -51,6 +53,29 @@ app.post("/events", (request, response) => {
     })
     .catch(console.error);
 });
+
+app.post("/events", (request, response) => {
+  const message = {
+  from: process.env.FROM_EMAIL,
+  to: process.env.TO_EMAIL,
+  subject: 'New Cabin Reservation',
+  text: `The cabin has been reserved by ${req.body.title} starting on ${new Date(req.body.start)} and ending on ${new Date(req.body.end)}`
+};
+
+mailer
+  .sendMessage(message)
+  .then(() => {
+    res.json({
+      message: 'Email sent.'
+    });
+  }).catch(error => {
+    res.status(500);
+    res.json({
+      error: error
+    });
+  });
+});
+
 
 app.post("/items", (request, response) => {
   queries

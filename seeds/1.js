@@ -6,29 +6,33 @@ exports.seed = function(knex, Promise) {
         {
           id: 1,
           title: 'Long Event',
-          start: "2018, 0, 7",
-          end: "2018, 0, 10",
+          start: new Date(2018, 0, 7),
+          end: new Date(2018, 0, 10),
+          allDay: true
         },
 
         {
           id: 2,
           title: 'DTS STARTS',
-          start: "2018, 0, 13",
-          end: "2018, 0, 20",
+          start: new Date(2018, 0, 13),
+          end: new Date(2018, 0, 20),
+          allDay: true
         },
 
         {
           id: 3,
           title: 'DTS ENDS',
-          start: "2018, 0, 6",
-          end: "2018, 0, 13",
+          start: new Date(2018, 0, 6),
+          end: new Date(2018, 0, 13),
+          allDay: true
         },
 
         {
           id: 4,
           title: 'Some Event',
-          start: "2018, 0, 20",
-          end: "2018, 0, 22",
+          start: new Date(2018, 0, 20),
+          end: new Date(2018, 0, 22),
+          allDay: true
         }
       ]).then(() => {
           return knex.raw("ALTER SEQUENCE events_id_seq RESTART WITH 5;");
