@@ -1,41 +1,17 @@
+const bcrypt = require('bcrypt');
 
 exports.seed = function(knex, Promise) {
-  return knex('events').del()
+  return knex('users').del()
     .then(function () {
-      return knex('events').insert([
+      return knex('users').insert([
         {
           id: 1,
-          title: 'Long Event',
-          start: new Date(2018, 0, 7),
-          end: new Date(2018, 0, 10),
-          allDay: true
-        },
-
-        {
-          id: 2,
-          title: 'DTS STARTS',
-          start: new Date(2018, 0, 13),
-          end: new Date(2018, 0, 20),
-          allDay: true
-        },
-
-        {
-          id: 3,
-          title: 'DTS ENDS',
-          start: new Date(2018, 0, 6),
-          end: new Date(2018, 0, 13),
-          allDay: true
-        },
-
-        {
-          id: 4,
-          title: 'Some Event',
-          start: new Date(2018, 0, 20),
-          end: new Date(2018, 0, 22),
-          allDay: true
+          email: 'kmkingdon@gmail.com',
+          username: 'Kevin Kingdon',
+          password: bcrypt.hash('samplePassword', 10)
         }
       ]).then(() => {
-          return knex.raw("ALTER SEQUENCE events_id_seq RESTART WITH 5;");
+          return knex.raw("ALTER SEQUENCE users_id_seq RESTART WITH 2;");
         });
     });
 };

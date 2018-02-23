@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
     table.date('start');
     table.date('end');
     table.boolean('allDay');
+    table.integer('user_id').references('users.id').onDelete("CASCADE")
   })
 };
 
