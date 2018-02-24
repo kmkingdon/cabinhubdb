@@ -4,7 +4,7 @@ const queries = require("./queries");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mailer = require('./mailer');
-const bcrypt = require('./bcrypt');
+const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 require('dotenv').config();
