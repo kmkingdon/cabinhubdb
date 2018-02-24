@@ -8,7 +8,7 @@ exports.seed = function(knex, Promise) {
           id: 1,
           email: 'kmkingdon@gmail.com',
           username: 'Kevin Kingdon',
-          password: bcrypt.hash('samplePassword', 10)
+          password: bcrypt.hashSync('samplePassword', 10)
         }
       ]).then(() => {
           return knex.raw("ALTER SEQUENCE users_id_seq RESTART WITH 2;");

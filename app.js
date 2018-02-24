@@ -6,7 +6,7 @@ const cors = require("cors");
 const mailer = require('./mailer');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const knex = require('./database-connection.js')
 require('dotenv').config();
 
 app.use(bodyParser.json());
@@ -88,11 +88,14 @@ app.post("/items", (request, response) => {
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
+  console.log(email)
+  console.log(password)
 
   knex('users')
     .select('*')
     .where('email', email)
     .then(user => {
+      console.log(user)
       if(user.length === 0) {
         res.json({error: 'Email not found. Please sign up or enter a new email'})
       } else {
@@ -151,7 +154,7 @@ app.put("/items/:id", (request, response) => {
 });
 
 app.use((request, response) => {
-  response.send(404);
+  response.sendStatus(404);
 });
 
 module.exports = app;
