@@ -9,7 +9,7 @@ exports.seed = function(knex, Promise) {
           start: new Date(2018, 0, 7),
           end: new Date(2018, 0, 10),
           allDay: true,
-          user_id: 1
+          users_id: 1
         },
 
         {
@@ -18,7 +18,7 @@ exports.seed = function(knex, Promise) {
           start: new Date(2018, 0, 13),
           end: new Date(2018, 0, 20),
           allDay: true,
-          user_id: 1
+          users_id: 1
         },
 
         {
@@ -27,7 +27,7 @@ exports.seed = function(knex, Promise) {
           start: new Date(2018, 0, 6),
           end: new Date(2018, 0, 13),
           allDay: true,
-          user_id: 1
+          users_id: 1
         },
 
         {
@@ -36,7 +36,7 @@ exports.seed = function(knex, Promise) {
           start: new Date(2018, 0, 20),
           end: new Date(2018, 0, 22),
           allDay: true,
-          user_id: 1
+          users_id: 1
         }
       ]).then(() => {
           return knex.raw("ALTER SEQUENCE events_id_seq RESTART WITH 5;");

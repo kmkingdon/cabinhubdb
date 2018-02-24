@@ -4,6 +4,9 @@ const queries = require("./queries");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const mailer = require('./mailer');
+const bcrypt = require('./bcrypt');
+const jwt = require('jsonwebtoken');
+
 require('dotenv').config();
 
 app.use(bodyParser.json());
@@ -80,6 +83,35 @@ app.post("/items", (request, response) => {
       response.status(201).json({ items });
     })
     .catch(console.error);
+});
+
+app.post("/login", (req, res) => {
+  let email = req.body.email;
+  let password = req.body.password;
+
+  knex('users')
+    .select('*')
+    .where('email', email)
+    .then(user => {
+      if(user.length === 0) {
+        res.json({error: 'Email not found. Please sign up or enter a new email'})
+      } else {
+        let hashedPassword = user[0].password;
+        let match = bcrypt.compareSync(password , hashedPassword);
+
+        if(match){
+          let payload = user[0];
+          delete payload.password;
+
+          let token= jwt.sign(Object.assign({},payload), process.env.TOKEN_SECRET)
+
+          res.json({token: token})
+
+        } else {
+          res.json({error: 'Password does not match the email entered.'})
+        }
+      }
+    })
 });
 
 app.delete("/events/:id", (request, response) => {
