@@ -88,14 +88,11 @@ app.post("/items", (request, response) => {
 app.post("/login", (req, res) => {
   let email = req.body.email;
   let password = req.body.password;
-  console.log(email)
-  console.log(password)
 
   knex('users')
     .select('*')
     .where('email', email)
     .then(user => {
-      console.log(user)
       if(user.length === 0) {
         res.json({error: 'Email not found. Please sign up or enter a new email'})
       } else {
@@ -108,8 +105,8 @@ app.post("/login", (req, res) => {
 
           let token= jwt.sign(Object.assign({},payload), process.env.TOKEN_SECRET)
 
-          res.json({token: token})
-
+          res.json({token})
+          console.log(token);
         } else {
           res.json({error: 'Password does not match the email entered.'})
         }
