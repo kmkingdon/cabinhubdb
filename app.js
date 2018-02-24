@@ -105,8 +105,8 @@ app.post("/login", (req, res) => {
 
           let token= jwt.sign(Object.assign({},payload), process.env.TOKEN_SECRET)
 
-          res.json({token})
-          console.log(token);
+          res.json({token:token, id:user.id})
+
         } else {
           res.json({error: 'Password does not match the email entered.'})
         }
