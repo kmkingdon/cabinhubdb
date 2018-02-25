@@ -12,13 +12,25 @@ require('dotenv').config();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/events", (request, response) => {
-  queries
-    .list("events")
-    .then(events => {
-      response.json({ events });
-    })
-    .catch(console.error);
+app.get("/events/:id", (request, response) => {
+  if(request.headers.authorization) {
+      let id= parseInt(request.params.id);
+      let token = request.headers.authorization.substring(7);
+      let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+
+      if(id === decodedToken.id) {
+        queries
+          .list("events")
+          .then(events => {
+            response.json({ events });
+          })
+          .catch(console.error);
+        } else {
+        response.json({error:'Unable to access data based on unsecure request'})
+      }
+    } else {
+      response.json({error:'Unable to access data based on unsecure request'})
+    }
 });
 
 app.get("/items", (request, response) => {
