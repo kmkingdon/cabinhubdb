@@ -33,13 +33,25 @@ app.get("/events/:id", (request, response) => {
     }
 });
 
-app.get("/items", (request, response) => {
-  queries
-    .list("items")
-    .then(events => {
-      response.json({ events });
-    })
-    .catch(console.error);
+app.get("/items/:id", (request, response) => {
+  if(request.headers.authorization) {
+      let id= parseInt(request.params.id);
+      let token = request.headers.authorization.substring(7);
+      let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+
+      if(id === decodedToken.id) {
+        queries
+          .list("items")
+          .then(events => {
+            response.json({ events });
+          })
+          .catch(console.error);
+        } else {
+        response.json({error:'Unable to access data based on unsecure request'})
+      }
+    } else {
+      response.json({error:'Unable to access data based on unsecure request'})
+    }
 });
 
 app.get("/events/:id", (request, response) => {
