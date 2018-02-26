@@ -12,43 +12,53 @@ require('dotenv').config();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/events/:id", (request, response) => {
+app.get("/events/", (request, response) => {
   if(request.headers.authorization) {
-      let id= parseInt(request.params.id);
+
       let token = request.headers.authorization.substring(7);
       let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      let email = decodedToken.email
 
-      if(id === decodedToken.id) {
-        queries
-          .list("events")
-          .then(events => {
-            response.json({ events });
-          })
-          .catch(console.error);
-        } else {
-        response.json({error:'Unable to access data based on unsecure request'})
-      }
+      knex("users")
+        .where('email', email)
+        .then(user => {
+          if(email === user.email) {
+            queries
+              .list("events")
+              .then(events => {
+                response.json({ events });
+              })
+              .catch(console.error);
+            } else {
+            response.json({error:'Unable to access data based on unsecure request'})
+          }
+        })
     } else {
       response.json({error:'Unable to access data based on unsecure request'})
     }
 });
 
-app.get("/items/:id", (request, response) => {
+app.get("/items", (request, response) => {
   if(request.headers.authorization) {
-      let id= parseInt(request.params.id);
+
       let token = request.headers.authorization.substring(7);
       let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      let email = decodedToken.email
 
-      if(id === decodedToken.id) {
-        queries
-          .list("items")
-          .then(events => {
-            response.json({ events });
-          })
-          .catch(console.error);
-        } else {
-        response.json({error:'Unable to access data based on unsecure request'})
-      }
+      knex("users")
+        .where('email', email)
+        .then(user => {
+          if(email === user.email) {
+            queries
+              .list("items")
+              .then(items => {
+                response.json({ items });
+              })
+              .catch(console.error);
+            } else {
+            response.json({error:'Unable to access data based on unsecure request'})
+          }
+        })
     } else {
       response.json({error:'Unable to access data based on unsecure request'})
     }
