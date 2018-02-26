@@ -72,14 +72,6 @@ app.get("/items/:id", (request, response) => {
     .catch(console.error);
 });
 
-app.get("/users", (request, response) => {
-  queries
-    .list("users")
-    .then(users => {
-      users ? response.json({ users }) : response.sendStatus(404);
-    })
-    .catch(console.error);
-});
 
 app.post("/events", (request, response) => {
   queries
