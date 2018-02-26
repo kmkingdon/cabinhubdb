@@ -139,6 +139,28 @@ app.post("/login", (req, res) => {
     })
 });
 
+app.post('/signup', function(req, res, next) {
+  let email= req.body.email;
+  let password= req.body.password;
+  let username= req.body.username;
+
+  knex('users')
+    .select('*')
+    .where('email', email)
+    .then(user => {
+      if(user.length === 0) {
+        let saltRounds= 10;
+        let hash= bcrypt.hashSync(password, saltRounds);
+        req.body.password = hash;
+
+        knex('users')
+          .insert(req.body)
+      } else {
+        res.json({error: 'Email already taken. Please enter a unique email'})
+      }
+    })
+});
+
 app.delete("/events/:id", (request, response) => {
   queries
     .delete("events", request.params.id)
