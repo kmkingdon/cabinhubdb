@@ -9,9 +9,15 @@ exports.seed = function(knex, Promise) {
           email: 'kmkingdon@gmail.com',
           username: 'Kevin Kingdon',
           password: bcrypt.hashSync('samplePassword', 10)
+        },
+        {
+          id: 2,
+          email: 'sample@gmail.com',
+          username: 'Sample',
+          password: bcrypt.hashSync('12345', 10)
         }
       ]).then(() => {
-          return knex.raw("ALTER SEQUENCE users_id_seq RESTART WITH 2;");
+          return knex.raw("ALTER SEQUENCE users_id_seq RESTART WITH 3;");
         });
     });
 };

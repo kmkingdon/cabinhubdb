@@ -36,7 +36,7 @@ exports.seed = function(knex, Promise) {
           start: new Date(2018, 0, 20),
           end: new Date(2018, 0, 22),
           allDay: true,
-          users_id: 1
+          users_id: 2
         }
       ]).then(() => {
           return knex.raw("ALTER SEQUENCE events_id_seq RESTART WITH 5;");
