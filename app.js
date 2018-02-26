@@ -74,7 +74,7 @@ app.get("/items/:id", (request, response) => {
 
 app.get("/users", (request, response) => {
   queries
-    .read("users")
+    .list("users")
     .then(users => {
       users ? response.json({ users }) : response.sendStatus(404);
     })
