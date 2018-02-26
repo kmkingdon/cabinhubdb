@@ -155,6 +155,7 @@ app.post('/signup', function(req, res, next) {
 
         knex('users')
           .insert(req.body)
+          .then(res.json({confirmation: 'Account has been created'}))
       } else {
         res.json({error: 'Email already taken. Please enter a unique email'})
       }
