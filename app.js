@@ -12,17 +12,20 @@ require('dotenv').config();
 app.use(bodyParser.json());
 app.use(cors());
 
-app.get("/events/", (request, response) => {
+app.get("/events", (request, response) => {
   if(request.headers.authorization) {
 
       let token = request.headers.authorization.substring(7);
       let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
       let email = decodedToken.email
 
+
       knex("users")
         .where('email', email)
         .then(user => {
-          if(email === user.email) {
+          let userData = Object.assign({}, user[0])
+
+          if(email === userData.email) {
             queries
               .list("events")
               .then(events => {
@@ -48,7 +51,9 @@ app.get("/items", (request, response) => {
       knex("users")
         .where('email', email)
         .then(user => {
-          if(email === user.email) {
+          let userData = Object.assign({}, user[0])
+
+          if(email === userData.email) {
             queries
               .list("items")
               .then(items => {
@@ -84,41 +89,81 @@ app.get("/items/:id", (request, response) => {
 
 
 app.post("/events", (request, response) => {
-  queries
-    .create("events", request.body)
-    .then(events => {
+  if(request.headers.authorization) {
 
-      const message = {
-      from: process.env.FROM_EMAIL,
-      to: process.env.TO_EMAIL,
-      subject: 'New Cabin Reservation',
-      text: `The cabin has been reserved by ${events.title} starting on ${events.start} and ending on ${events.end}`
-      };
+      let token = request.headers.authorization.substring(7);
+      let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      let email = decodedToken.email
 
-    mailer
-      .sendMessage(message)
-      .then(() => {
-        response.status(201).json({ events });
-      }).catch(error => {
-        response.status(500);
-        response.json({
-          error: error
-        });
-      });
+      knex("users")
+        .where('email', email)
+        .then(user => {
+          let userData = Object.assign({}, user[0])
 
-    })
-    .catch(console.error);
+          if(email === userData.email) {
+            queries
+              .create("events", request.body)
+              .then(events => {
+
+                const message = {
+                from: process.env.FROM_EMAIL,
+                to: process.env.TO_EMAIL,
+                subject: 'New Cabin Reservation',
+                text: `The cabin has been reserved by ${events.title} starting on ${events.start} and ending on ${events.end}`
+                };
+
+              mailer
+                .sendMessage(message)
+                .then(() => {
+                  response.status(201).json({ events });
+                }).catch(error => {
+                  response.status(500);
+                  response.json({
+                    error: error
+                  });
+                });
+
+              })
+              .catch(console.error);
+            } else {
+            response.json({error:'Unable to access data based on unsecure request'})
+          }
+        })
+    } else {
+      response.json({error:'Unable to access data based on unsecure request'})
+    }
 });
 
 
 app.post("/items", (request, response) => {
-  queries
-    .create("items", request.body)
-    .then(items => {
-      response.status(201).json({ items });
-    })
-    .catch(console.error);
+  if(request.headers.authorization) {
+
+      let token = request.headers.authorization.substring(7);
+      let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      let email = decodedToken.email
+
+      knex("users")
+        .where('email', email)
+        .then(user => {
+          let userData = Object.assign({}, user[0])
+
+          if(email === userData.email) {
+            queries
+              .create("items", request.body)
+              .then(items => {
+                response.status(201).json({ items });
+              })
+              .catch(console.error);
+            } else {
+            response.json({error:'Unable to access data based on unsecure request'})
+          }
+        })
+    } else {
+      response.json({error:'Unable to access data based on unsecure request'})
+    }
 });
+
+
 
 app.post("/login", (req, res) => {
   let email = req.body.email;
@@ -191,22 +236,61 @@ app.delete("/items/:id", (request, response) => {
 });
 
 app.put("/events/:id", (request, response) => {
-  queries
-    .update("events", request.params.id, request.body)
-    .then(events => {
-      response.json({ events });
-    })
-    .catch(console.error);
+  if(request.headers.authorization) {
+
+      let token = request.headers.authorization.substring(7);
+      let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      let email = decodedToken.email
+
+      knex("users")
+        .where('email', email)
+        .then(user => {
+          let userData = Object.assign({}, user[0])
+
+          if(email === userData.email) {
+            queries
+              .update("events", request.params.id, request.body)
+              .then(events => {
+                response.json({ events });
+              })
+              .catch(console.error);
+            } else {
+            response.json({error:'Unable to access data based on unsecure request'})
+          }
+        })
+    } else {
+      response.json({error:'Unable to access data based on unsecure request'})
+    }
 });
 
 app.put("/items/:id", (request, response) => {
-  queries
-    .update("items", request.params.id, request.body)
-    .then(items => {
-      response.json({ items });
-    })
-    .catch(console.error);
+  if(request.headers.authorization) {
+
+      let token = request.headers.authorization.substring(7);
+      let decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
+      let email = decodedToken.email
+
+      knex("users")
+        .where('email', email)
+        .then(user => {
+          let userData = Object.assign({}, user[0])
+
+          if(email === userData.email) {
+            queries
+              .update("items", request.params.id, request.body)
+              .then(items => {
+                response.json({ items });
+              })
+              .catch(console.error);
+            } else {
+            response.json({error:'Unable to access data based on unsecure request'})
+          }
+        })
+    } else {
+      response.json({error:'Unable to access data based on unsecure request'})
+    }
 });
+
 
 app.use((request, response) => {
   response.sendStatus(404);
